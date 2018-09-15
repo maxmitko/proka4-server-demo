@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env nodemon app.js",
+    "start": "cross-env NODE_ENV=development nodemon app.js",
     "prod": "cross-env NODE_ENV=production node app.js"
   },
   "author": "MaxMitko",
@@ -15,6 +15,7 @@
     "async": "^2.6.1",
     "body-parser": "^1.18.3",
     "casl": "^1.1.0",
+    "cors": "^2.8.4",
     "crypto-js": "^3.1.9-1",
     "dotenv": "^6.0.0",
     "emailjs": "^2.2.0",

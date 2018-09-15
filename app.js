@@ -22,9 +22,13 @@ app.set('view engine', 'pug');
 // static files handler
 app.use(express.static(path.join(__dirname, '/public')));
 
+// work only with NODE_ENV=development
+require('./libs/cors')(app);
+
 require('./libs/email');
 require('./libs/session')(app);
 require('./libs/passport')(app);
 require('./routes/root')(app);
 
 app.listen(process.env.SERVER_PORT, () => console.log('Сервер работает'));
+

@@ -121,8 +121,6 @@ router
                                 });
                             }
 
-                            res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-                            res.header('Access-Control-Allow-Methods', 'POST');
                             res.send('OK')
                         });
                     });
@@ -130,11 +128,6 @@ router
             });
         });
 
-    })
-    .options('/clientvisit/status', function (req, res) {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-        res.header('Access-Control-Allow-Methods', 'PUT');
-        res.send('OK')
     })
     .put('/clientvisit/status', function (req, res) {
 
@@ -190,8 +183,6 @@ router
                                 });
                             }
 
-                            res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-                            res.header('Access-Control-Allow-Methods', 'PUT');
                             res.send('OK')
                         });
                     });
