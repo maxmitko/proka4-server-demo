@@ -1,0 +1,24 @@
+- var mainList = {about: 'О центре', news: 'Новости', service: 'Услуги',schedule: 'Расписание',shop: 'Магазин'}
+nav.main-nav
+    .main-nav__wrapper.container
+        ul.main-nav__list.site-list
+            each val, key in mainList
+                li.main-nav__item
+                    if key !== "/" && currentPage === key
+                        a.main-nav__link.current-link(href=`/${key}`)
+                            span= val
+                    else
+                        a.main-nav__link(href=`/${key}`)
+                            span= val
+        if !userName
+            ul.main-nav__list.user-list
+                li.main-nav__item.main-nav__item--login-icon
+                    a.main-nav__link(href='/user/login') Вход
+                li.main-nav__item
+                    a.main-nav__link(href='/user/registration') Регистрация
+        else
+            ul.main-nav__list.user-list
+                li.main-nav__item.main-nav__item--profile-icon
+                    a.main-nav__link(href='/user/profile')= userName
+                li.main-nav__item.main-nav__item--logout-icon
+                    a.main-nav__link(href='/user/logout') Выход

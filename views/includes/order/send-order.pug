@@ -1,0 +1,9 @@
+section.send-order.modal.visually-hidden
+    h2 Подтвердить заказ
+    p * Пожалуста напишите Ваше имя и телефон, <br> мы свяжемся с вами.
+    form.send-order__form(action='#', method='post')
+        input(type='text', name='customer', placeholder='имя' required)
+        input(type='text', name='phone', placeholder='телефон' required)
+        p.informer
+        button.button(type='submit') Отправить
+    button.modal__close(type='button') Закрыть

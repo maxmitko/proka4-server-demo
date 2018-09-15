@@ -1,0 +1,34 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Магазин
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item Магазин
+        section.catalog.page-main-inner__catalog
+            h2.visually-hidden Каталог товаров
+            a.catalog__basket-btn.button.button--green(href="/shop/order") Корзина (0)
+            ul.catalog__list
+                each item in productList
+                    li.catalog__item
+                        a(href=`/shop/product/${item.id}`)
+                            .catalog__img-wrapper
+                                img(src=`img/catalog/preview/${item.image}`)
+                            h3
+                                span.catalog__category= item.grp_title
+                                span.catalog__item-title= item.title
+                                span= item.taste_title
+                        .item-price.catalog__item-price
+                            span.item-price__count= item.price + ' р'
+                            button.item-price__button.button(data-product-id=`${item.id}`) в корзину
+            //nav.pagination.page-main-inner__pagination
+            //    .pagination__list
+            //        a.pagination__item(href='#')
+            //            span 1
+            //        a.pagination__item
+            //            span 2
+            //        a.pagination__item(href='#')
+            //            span 3
+            //        a.pagination__item(href='#')
+            //            span 4

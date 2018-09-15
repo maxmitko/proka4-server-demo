@@ -1,0 +1,17 @@
+doctype html
+html(lang='ru')
+    head
+        block head
+            include ../includes/head
+    body
+        block page-header
+        block page-main
+        block page-footer
+            include ../includes/footer
+        block page-modals
+            include ../includes/map
+            include ../includes/login
+            include ../includes/registration
+            include ../includes/shadow
+        block page-scripts
+            include ../includes/scripts

@@ -1,0 +1,90 @@
+extends template/index
+
+block page-header
+    header.page-header
+        include includes/main-nav
+        include includes/logo
+block page-main
+    main.page-main.container
+        h1.visually-hidden Центр энергетики "прокачайся"
+        section.features.page-main__features
+            h2.visually-hidden преимущества
+            ul.features__list
+                li.features__item
+                    h3 Результат
+                    p
+                        | 95% наших клиентов рады своим
+                        br
+                        | результатам! Мы гарантируем уменьшение
+                        br
+                        | Ваших объёмов до 20 см!
+                li.features__item
+                    h3 Комплекс
+                    p
+                        | работа с телом, осанкой, лицом!
+                        br
+                        | вы укрепите интимные мышцы! научитесь
+                        br
+                        | расслабляться на медитациях!
+                li.features__item
+                    h3 Доступность
+                    p
+                        | центр города!
+                        br
+                        | занимайтесь в любом возрасте!
+                        br
+                        | удобный график!
+        .column-wrapper.page-main__column-wrapper
+            section.service
+                h2 Услуги
+                ul.service__list
+                    each service in serviceList
+                        li.service__item
+                            a.service__link(href=`/service/${service.id}`)= service.title
+                a.button.service_button(href='/service') все услуги
+            .column-wrapper__devider
+            section.news
+                h2 Новости
+                ul.news__list
+                    each val in news
+                        li.news__item
+                            a(href=`/news#${val.link_hash}`)
+                                h3= val.title
+                            p= val.topic
+                            time= val.time
+                a.button.news__button(href='/news') все новости
+        .column-wrapper
+            section.contacts
+                h2 Контакты
+                p.contacts__wrapper
+                    | центр энергетики «pro-качайся»
+                    br
+                    | ТЦ "Олимп", 6 этаж, от лифта направо и до конца
+                    br
+                    | телефон: +7917-939-50-05 / +7917-895-08-35
+                p.contacts__wrapper
+                    | время работы:
+                    br
+                    | пн—пт: с 18:00 до 21:00
+                    br
+                    | сб—вс: с 18:00 до 21:00
+                .contacts__btn-wrapper
+                    button(class='button' id="contacts-map") на карте
+                    a.button(href='/schedule') расписание
+            .column-wrapper__devider
+            section.appointment
+                h2 Записаться
+                p укажите ваше имя и телефон и мы свяжемся с вами!
+                form.appointment__form(action='#', method='post')
+                    .appointment__item
+                        label(for='appointment-name') Ваше имя
+                        input#appointment-name(type='text', name='name' required)
+                    .appointment__item
+                        label(for='appointment-phone') Телефон
+                        input#appointment-phone(type='tel', name='phone' required)
+                    .appointment__area
+                        label(for='appointment-time') Комментарий
+                        textarea#appointment-time(name='comment', placeholder='Что Вас интересуют?')
+                    div.informer
+                    button.button(type='submit') Отправить
+

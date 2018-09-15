@@ -1,0 +1,13 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Новости
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item Новости
+        .news-article-wrapper
+            each val in newsList
+                article.article.news-article__item
+                    h2(id=val.link_hash)= val.title
+                    != val.content

@@ -1,0 +1,17 @@
+section.login.modal.visually-hidden
+    h2 Личный кабинет
+    p Введите пожалуйста свой логин и пароль.
+    form.login__form(action='#', method='post')
+        input(type='text', name='username', placeholder='Введите email или логин')
+        |
+        input(type='password', name='password', placeholder='Пароль')
+        p.informer
+        //.login__password-info
+        //    label.checkbox-my.checkbox-my--stick
+        //        input.visually-hidden(type='checkbox', name='remember')
+        //        span.checkbox-my__border
+        //        span.checkbox-my__marker.checkbox-my__marker--stick
+        //        | Запомните меня
+        //    a.login__restore(href='#') Я забыл пароль!
+        button.button(type='submit') Войти
+    button.modal__close(type='button') Закрыть

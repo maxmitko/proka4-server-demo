@@ -1,0 +1,29 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Личный кабинет
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item Личный кабинет
+        section.profile
+            h2.visually-hidden Профиль
+            form.profile__form(action='#')
+                fieldset.profile__list
+                    legend Профиль
+                    label.profile__item Логин
+                        input(type='text', name='username', value=`${user.username}`, disabled)
+                    label.profile__item Email
+                        input(type='text', name='email', value=`${user.email}`, disabled)
+                    label.profile__item Телефон
+                        input(type='text', name='phone', value=`${user.phone}`)
+                    label.profile__item ФИО
+                        input(type='text', name='fullname', value=`${user.fullname}`)
+                    label.profile__item Пароль
+                        input(type='password', name='password', placeholder='******')
+                    label.profile__item Повторить пароль
+                        input(type='password', name='repassword', placeholder='******')
+                    p.informer
+                    button.button.profile__button(type='submit') Изменить
+
+

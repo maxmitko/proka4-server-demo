@@ -1,0 +1,14 @@
+thead
+    tr.order__head
+        td наименование
+        td стоимость
+        td количество
+    tbody
+        each row in order
+            tr.order__item
+                if row.prod_taste
+                    td= `${row.prod_title} (${row.prod_taste})`
+                else
+                    td= `${row.prod_title}`
+                td= `${row.total} р`
+                td= row.count

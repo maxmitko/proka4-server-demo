@@ -1,0 +1,17 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Услуги
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item Услуги
+        section.service-img
+            h2.visually-hidden Список услуг
+            each service in serviceList
+                a.service-img__link(href=`/service/${service.service_id}`)
+                    div.service-img__filter
+                        div.service-img__item(style=`background-image: url("${service.img}");`)
+                            div.service-img__title-wrapper
+                    h2.service-img__title= service.title
+
