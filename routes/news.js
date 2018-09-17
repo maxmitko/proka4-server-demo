@@ -12,7 +12,7 @@ router
                  nw.topic     AS 'topic',
                  nw.link_hash AS 'link_hash'
           FROM news nw
-          ORDER BY nw.id DESC 
+          ORDER BY nw.id DESC
         `;
 
         pool.query(sql, function (err, rows) {

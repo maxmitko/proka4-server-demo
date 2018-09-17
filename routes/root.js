@@ -9,7 +9,7 @@ const admin = require('./admin');
 const order = require('./order');
 const appointment = require('./appointment');
 const api = require('./api');
-const passport = require('passport');
+const protect = require('../libs/authorization');
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -23,7 +23,7 @@ module.exports = function (app) {
     });
     app.use('/', index);
     app.use('/about', about);
-    app.use('/admin', passport.protect(), admin);
+    app.use('/admin', protect((req) => req.ability.can('manage', 'Admin')), admin);
     app.use('/news', news);
     app.use('/service', service);
     app.use('/schedule', schedule);

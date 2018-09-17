@@ -5,14 +5,15 @@ const pool = require('../libs/mysql-connect');
 const cryptPassword = require('../libs/cryptPassword');
 const {validationResult, body} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
+const protect = require('../libs/authorization');
 
 const registrationChecker = [
     body('username').isLength({min: 3, max: 20}).withMessage('логин мин 3 макс 20 символов'),
     body('username').custom(async (value, {req}) => {
 
         await pool.query(`SELECT username
-                                 FROM users
-                                 WHERE username = :username`, {username: req.body.username})
+                          FROM users
+                          WHERE username = :username`, {username: req.body.username})
             .then(rows => {
                 if (rows.length !== 0) {
                     throw new Error('Такой логин уже занят');
@@ -24,8 +25,8 @@ const registrationChecker = [
     body('email').custom(async (value, {req}) => {
 
         await pool.query(`SELECT email
-                                 FROM users
-                                 WHERE email = :email`, {email: req.body.email})
+                          FROM users
+                          WHERE email = :email`, {email: req.body.email})
             .then(rows => {
                 if (rows.length !== 0) {
                     throw new Error('Email уже занят');
@@ -76,11 +77,11 @@ router
         req.logout();
         res.redirect('/');
     })
-    .get('/profile', passport.protect(), function (req, res) {
+    .get('/profile', protect((req) => req.ability.can('read', 'Profile')), function (req, res) {
 
         res.render('profile', {user: req.user});
     })
-    .put('/profile', passport.protect(), profileChecker, function (req, res) {
+    .put('/profile', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
 
         const errors = validationResult(req);
 

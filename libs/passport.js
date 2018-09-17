@@ -7,13 +7,12 @@ module.exports = function (app) {
 
     app.use(passport.initialize());
     app.use(passport.session());
-    passport.protect = require('./authentication');
 
     passport.use(new LocalStrategy(async (username, password, done) => {
 
-        let foo = await pool.query('SELECT * FROM users WHERE username = :username', {username: username});
-        let bar = await pool.query('SELECT * FROM users WHERE email = :email', {email: username});
-        let user = foo[0] || bar[0];
+        let byName = await pool.query('SELECT * FROM users WHERE username = :username', {username: username});
+        let byEmail = await pool.query('SELECT * FROM users WHERE email = :email', {email: username});
+        let user = byName[0] || byEmail[0];
 
         if (!user.username) {
             return done(null, false);
@@ -35,9 +34,15 @@ module.exports = function (app) {
     passport.deserializeUser(function (id, done) {
 
         const sql = `
-          SELECT id, username, email, phone, fullname
-          FROM users
-          WHERE id = :id
+          SELECT u.id       AS 'id',
+                 u.username AS 'username',
+                 u.email    AS 'email',
+                 u.phone    AS 'phone',
+                 u.fullname AS 'fullname',
+                 ur.role    AS 'role'
+          FROM users u
+                 LEFT JOIN user_roles ur ON ur.id = u.role
+          WHERE u.id = :id
         `;
 
         pool.query(sql, {id: id}, function (err, rows) {
