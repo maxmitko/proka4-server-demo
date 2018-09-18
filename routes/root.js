@@ -8,7 +8,6 @@ const user = require('./user');
 const admin = require('./admin');
 const order = require('./order');
 const appointment = require('./appointment');
-const api = require('./api');
 const protect = require('../libs/authorization');
 
 module.exports = function (app) {
@@ -31,7 +30,5 @@ module.exports = function (app) {
     app.use('/shop/order', order);
     app.use('/user', user);
     app.use('/appointment', appointment);
-    app.use('/api', api);
-
 };
 

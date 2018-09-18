@@ -1,6 +1,8 @@
 const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
+const emailSender = require('../libs/email');
+const pug = require('pug');
 
 router
     .get('/', (req, res) => {
@@ -88,7 +90,7 @@ router
                     userId: user,
                     customer: req.body.customer,
                     phone: req.body.phone
-                }, function (err, okPacket) {
+                }, function (err, okPacketOrder) {
 
                     if (err) {
                         return connection.rollback(function () {
@@ -100,7 +102,7 @@ router
                     const order = JSON.parse(req.body.order);
 
                     const body = order.map(item => {
-                        return [okPacket.insertId, item.id, item.count]
+                        return [okPacketOrder.insertId, item['id'], item['count']]
                     });
 
                     const orderProdSql = `
@@ -108,7 +110,7 @@ router
                       VALUES :body
                     `;
 
-                    connection.query(orderProdSql, {body}, function (err, results, fields) {
+                    connection.query(orderProdSql, {body}, function (err, okPacket) {
                         if (err) {
                             return connection.rollback(function () {
                                 connection.release();
@@ -124,6 +126,13 @@ router
                                     throw err;
                                 });
                             }
+
+                            const emailBody = pug.renderFile('views/order-email.pug', {
+                                ...req.body,
+                                order
+                            });
+
+                            emailSender(process.env.ADMIN_EMAIL, `Поступил заказ № ${okPacketOrder.insertId} от покупателя!`, emailBody);
 
                             if (req.user) {
                                 res.redirect('/shop/order');

@@ -1,15 +1,15 @@
 const email = require("emailjs");
 
 const server = email.server.connect({
-    user: process.env.EMAIL_USER,
-    password: process.env.PASSWORD,
-    host: process.env.HOST,
+    user: process.env.EMAIL_SERVICE_USER,
+    password: process.env.EMAIL_SERVICE_PASSWORD,
+    host: process.env.EMAIL_SERVICE_HOST,
     ssl: true
 });
 
 const message = {
-    from: "PRO-качайся <proka4club@mail.ru>",
-    subject: "Заголовок письма",
+    from: `PRO-качайся <${process.env.EMAIL_SERVICE}>`,
+    subject: "Центр энергетики PRO-качайся",
     attachment:
         [
             {data: "<html>Тело письма</html>", alternative: true},

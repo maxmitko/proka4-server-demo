@@ -12,11 +12,11 @@ router
                  pd.count         AS 'count',
                  pd.image         AS 'image',
                  prop.id          AS 'prop_id',
-                 prop.title       AS 'title',
+                 prop.title       AS 'prod_title',
                  prop.set         AS 'set',
                  prop.description AS 'description',
                  grp.title        AS 'grp_title',
-                 taste.title      AS 'taste_title'
+                 taste.title      AS 'prod_taste'
           FROM product pd
                  LEFT JOIN product_properties prop ON pd.properties_id = prop.id
                  LEFT JOIN product_group grp ON prop.group_id = grp.id
@@ -38,11 +38,11 @@ router
                  pd.count         AS 'count',
                  pd.image         AS 'image',
                  prop.id          AS 'prop_id',
-                 prop.title       AS 'title',
+                 prop.title       AS 'prod_title',
                  prop.set         AS 'set',
                  prop.description AS 'description',
                  grp.title        AS 'grp_title',
-                 taste.title      AS 'taste_title'
+                 taste.title      AS 'prod_taste'
           FROM product pd
                  LEFT JOIN product_properties prop ON pd.properties_id = prop.id
                  LEFT JOIN product_group grp ON prop.group_id = grp.id
@@ -53,7 +53,23 @@ router
         pool.query(sql, {pdId: req.params.id}, function (err, rows) {
             if (err) throw err;
 
-            res.render('product', {product: rows[0]});
+            res.format({
+                'text/plain': function(){
+                    res.send(rows);
+                },
+                'text/html': function(){
+                    res.render('product', {product: rows[0]});
+                },
+                'application/json': function(){
+                    res.header('Access-Control-Allow-Origin', '*');
+                    res.json(rows[0]);
+                },
+                'default': function() {
+                    // log the request and respond with 406
+                    res.status(406).send('Not Acceptable');
+                }
+            });
+
         })
 
     });

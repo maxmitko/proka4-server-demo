@@ -17,8 +17,8 @@ block page-main
                                 img(src=`img/catalog/preview/${item.image}`)
                             h3
                                 span.catalog__category= item.grp_title
-                                span.catalog__item-title= item.title
-                                span= item.taste_title
+                                span.catalog__item-title= item.prod_title
+                                span= item.prod_taste
                         .item-price.catalog__item-price
                             span.item-price__count= item.price + ' р'
                             button.item-price__button.button(data-product-id=`${item.id}`) в корзину
