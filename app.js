@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer();
 const casl = require('./libs/casl');
+const config = require('./libs/myconfig')
 
 // parse body application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
@@ -36,5 +37,5 @@ require('./libs/cors')(app);
 require('./libs/email');
 require('./routes/root')(app);
 
-app.listen(process.env.SERVER_PORT, () => console.log('Сервер работает'));
+app.listen(config.server.port, () => console.log('Сервер работает'));
 
