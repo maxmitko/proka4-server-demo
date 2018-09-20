@@ -2,11 +2,11 @@ extends template/inner-page
 
 block page-main
     main.page-main-inner.container
-        h1= `${product.grp_title} «${product.title}»`
+        h1= `${product.grp_title} «${product.prod_title}»`
         nav.breadcrumbs.page-main-inner__breadcrumbs
             a.breadcrumbs__item(href='/') Главная
             a.breadcrumbs__item(href='/shop') Магазин
-            a.breadcrumbs__item= product.title
+            a.breadcrumbs__item= product.prod_title
         .product
             a.catalog__basket-btn.button.button--green(href="/shop/order") Корзина (0)
             figure.product__photos
