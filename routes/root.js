@@ -20,6 +20,12 @@ module.exports = function (app) {
 
         next();
     });
+    app.use(function (req, res, next) {
+        if (req.secure || process.env.NODE_ENV !== 'production') {
+            return next();
+        }
+        res.redirect("https://" + req.headers.host + req.url);
+    });
     app.use('/', index);
     app.use('/about', about);
     app.use('/admin', protect((req) => req.ability.can('manage', 'Admin')), admin);
