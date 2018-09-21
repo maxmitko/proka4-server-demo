@@ -39,7 +39,7 @@ router
                 orderId.forEach(ordItem => {
 
                     let row = rows.filter(row => {
-                        if (row.id === ordItem) return row;
+                        return (row.id === ordItem);
                     });
 
                     result.push(row)

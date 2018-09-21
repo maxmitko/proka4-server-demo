@@ -46,7 +46,7 @@ router
             scheduleTypes.forEach(type => {
 
                 let items = rows.filter(item => {
-                    if (item.type === type) return item;
+                    return (item.type === type);
                 });
 
                 let mergedByTime = [];
@@ -66,7 +66,7 @@ router
                 }, 0);
 
                 let scheduleByType = schedule.filter(item => {
-                    if (item.type === type) return item;
+                    return (item.type === type);
                 });
 
                 const colors = {};
