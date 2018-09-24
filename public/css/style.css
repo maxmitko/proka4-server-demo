@@ -142,7 +142,8 @@ figure {
   position: fixed;
   color: black;
   z-index: 10;
-  padding: 35px 70px 45px 70px; }
+  padding: 35px 70px 45px 70px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
 
 #modal-shadow {
   content: "";
@@ -576,8 +577,7 @@ figure {
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
-  background-color: #f8f5f2;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+  background-color: #f8f5f2; }
   .login p {
     margin-bottom: 11px; }
   .login h2 {
@@ -1167,3 +1167,20 @@ figure {
 
 .informer--green {
   color: #007600; }
+
+.notify {
+  min-width: 270px;
+  min-height: 150px;
+  max-width: 320px;
+  top: 120px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  background-color: #f8f5f2; }
+
+.notify__button {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%); }
