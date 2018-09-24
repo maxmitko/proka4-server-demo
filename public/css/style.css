@@ -59,7 +59,7 @@ figure {
   .button:focus {
     background-color: #663d15; }
   .button:active {
-    background-color: #663d15; }
+    background-color: #238723; }
 
 .button--green {
   background-color: #238723; }
@@ -790,6 +790,20 @@ figure {
   position: absolute;
   top: -60px;
   right: 0; }
+
+.catalog__basket-btn--add {
+  -webkit-animation: blinkBasket 200ms 2 alternate;
+          animation: blinkBasket 200ms 2 alternate; }
+
+@-webkit-keyframes blinkBasket {
+  to {
+    box-shadow: 0 0 7px #34c734;
+    background-color: #2ba72b; } }
+
+@keyframes blinkBasket {
+  to {
+    box-shadow: 0 0 7px #34c734;
+    background-color: #2ba72b; } }
 
 .item-price {
   display: flex;
