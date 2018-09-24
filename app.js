@@ -9,6 +9,7 @@ const multer = require('multer');
 const upload = multer();
 const casl = require('./libs/casl');
 const config = require('./libs/myconfig')
+const favicon = require('serve-favicon');
 
 // parse body application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,6 +25,7 @@ app.set('view engine', 'pug');
 
 // static files handler
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(favicon(path.join(__dirname, 'public', 'img', 'favicon.ico')));
 
 // authentication module
 require('./libs/session')(app);
