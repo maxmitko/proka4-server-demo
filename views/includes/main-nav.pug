@@ -2,6 +2,8 @@
 nav.main-nav
     .main-nav__wrapper.container
         ul.main-nav__list.site-list
+            li.main-nav__item.main-nav__logo
+                a.main-nav__link(href='/')
             each val, key in mainList
                 li.main-nav__item
                     if key !== "/" && currentPage === key
