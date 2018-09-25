@@ -555,10 +555,19 @@ figure {
 .copyright__link {
   width: 92px;
   height: 30px;
-  background-image: url("/img/mm-copyright.png");
   display: block;
   margin: 0 auto;
   margin-top: 10px; }
+
+.copyright__name {
+  background: #fe6192;
+  padding: 5px 10px;
+  position: relative;
+  font-size: 14px;
+  color: white;
+  font-weight: normal;
+  text-transform: none;
+  font-family: 'Roboto Mono', sans-serif; }
 
 .map {
   width: 766px;
