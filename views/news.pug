@@ -10,4 +10,6 @@ block page-main
             each val in newsList
                 article.article.news-article__item
                     h2(id=val.link_hash)= val.title
+                    time= val.fromTo
+                    br
                     != val.content
