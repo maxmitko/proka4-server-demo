@@ -59,7 +59,7 @@ figure {
   .button:focus {
     background-color: #663d15; }
   .button:active {
-    background-color: #238723; }
+    background-color: #876823; }
 
 .button--green {
   background-color: #238723; }
@@ -560,7 +560,7 @@ figure {
   margin-top: 10px; }
 
 .copyright__name {
-  background: #fe6192;
+  background: #3d3d3d;
   padding: 5px 10px;
   position: relative;
   font-size: 14px;
