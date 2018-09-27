@@ -28,8 +28,6 @@ router
                     fromTo: getFromToMonth(item.from, item.to)
                 }
             })
-
-            console.log(newsList);
             
             res.render('news', { newsList });
         });
