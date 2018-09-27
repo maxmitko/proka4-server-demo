@@ -8,25 +8,22 @@ router
     .get('/', async (req, res) => {
 
         const schdl_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schdl-list.sql'), {encoding: 'UTF-8'})
+        const schdl_type_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schdl-type-list.sql'), {encoding: 'UTF-8'})
         const schday_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schday-list.sql'), {encoding: 'UTF-8'})
         
         const schedule = await pool.query(schdl_sql);
-
+        const scheduleTypes = await pool.query(schdl_type_sql);
+        
         pool.query(schday_sql, function (err, rows) {
             if (err) throw err;
 
-            const scheduleTypes = new Set();
-            rows.forEach(schedule => {
-                scheduleTypes.add(schedule.type)
-            });
-
             const scheduleChunkByType = [];
-            scheduleTypes.forEach(type => {
+            scheduleTypes.forEach(schdl_type => {
 
                 let items = rows.filter(item => {
-                    return (item.type === type);
+                    return (item.type === schdl_type.id);
                 });
-
+                
                 let mergedByTime = [];
                 items.reduce((acc, item) => {
                     if (acc.tmlst_id === item.tmlst_id) {
@@ -43,8 +40,9 @@ router
                     return item;
                 }, 0);
 
+
                 let scheduleByType = schedule.filter(item => {
-                    return (item.type === type);
+                    return (item.type === schdl_type.id);
                 });
 
                 const colors = {};
@@ -52,9 +50,9 @@ router
                     colors[item.id] = item.color;
                 });
 
-                scheduleChunkByType.push({items: mergedByTime, colors, schedule: scheduleByType})
+                scheduleChunkByType.push({items: mergedByTime, schedule: scheduleByType, colors})
             });
-
+            
             res.render('schedule', {scheduleChunkByType});
         });
     })

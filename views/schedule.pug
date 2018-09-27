@@ -16,8 +16,12 @@ block page-main
                                 span.checkbox-my__border
                                 span.checkbox-my__marker.checkbox-my__marker--square(style=`background-color: ${item.color}`)
                                 | !{item.title + " "}
-                                time.schedule__filter-time
-                                    | с !{item.startday} по !{item.finishday}
+                                if (item.startday)
+                                    time.schedule__filter-time
+                                        | с !{item.startday} по !{item.finishday}
+                                else
+                                    time.schedule__filter-time
+                                        | еженедельно
                 table.schedule__table
                     thead
                         tr.schedule__row
