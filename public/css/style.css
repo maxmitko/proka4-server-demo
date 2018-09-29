@@ -10,8 +10,8 @@ body {
   text-transform: uppercase;
   color: #292929;
   background-image: url("/img/bg-index.jpg"), linear-gradient(to bottom, #a3a3a3, #f8f5f2 40%);
-  background-size: contain;
-  background-position: top;
+  background-size: auto;
+  background-position: center top;
   background-repeat: no-repeat;
   letter-spacing: 0.01em; }
 
