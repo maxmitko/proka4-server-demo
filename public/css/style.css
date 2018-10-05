@@ -340,7 +340,7 @@ figure {
     height: 11px;
     background-color: #292929;
     position: absolute;
-    top: 50%;
+    top: 18px;
     left: 0;
     -webkit-transform: rotate(45deg) translateY(-50%);
             transform: rotate(45deg) translateY(-50%); }
