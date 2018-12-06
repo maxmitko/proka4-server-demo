@@ -7,7 +7,7 @@ router
 
             res.render('admin');
         })
-    .get('/clientcard', function (req, res) {
+    .get('/clientscard', function (req, res) {
 
         const sql = `
           SELECT srv.id                AS 'srv_id',
@@ -37,7 +37,7 @@ router
             })
         })
     })
-    .get('/clientvisit', function (req, res) {
+    .get('/clientsvisit', function (req, res) {
 
         const sql = `
           SELECT srv.id                                      AS 'srv_id',
@@ -70,7 +70,7 @@ router
             })
         })
     })
-    .post('/clientvisit', function (req, res) {
+    .post('/clientsvisit', function (req, res) {
 
 
         pool.getConnection(function (err, connection) {
@@ -129,7 +129,7 @@ router
         });
 
     })
-    .put('/clientvisit/status', function (req, res) {
+    .put('/clientsvisit/status', function (req, res) {
 
         pool.getConnection(function (err, connection) {
             if (err) {
