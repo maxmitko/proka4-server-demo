@@ -12,19 +12,19 @@ const protect = require('../libs/authorization');
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
-
+        
         const result = req.originalUrl.match(/^\/[a-z]+/);
 
-        res.locals.currentPage = result ? result[0].slice(1) : '/';
-        res.locals.userName = req.user ? req.user.username : null;
+        res.locals.currentPage = result ? result[0].slice(1) : '/'; // храним в locals первый уровень названия роута убрав "/"
+        res.locals.userName = req.user ? req.user.username : null; // прокидываем в locals имя пользователя если есть такой
 
         next();
     });
-    app.use(function (req, res, next) {
+    app.use(function (req, res, next) { 
         if (req.secure || process.env.NODE_ENV !== 'production') {
             return next();
         }
-        res.redirect("https://" + req.headers.host + req.url);
+        res.redirect("https://" + req.headers.host + req.url); // редирект пользователя на https
     });
     app.use('/', index);
     app.use('/about', about);
