@@ -45,7 +45,7 @@ router
                 throw err;
             }
 
-            let body = JSON.parse(req.body['data']);
+            let body = req.body
 
             connection.beginTransaction(function (err) {
                 if (err) throw err;
@@ -103,7 +103,7 @@ router
                 throw err;
             }
 
-            let body = JSON.parse(req.body['data']);
+            let body = req.body;
 
             connection.beginTransaction(function (err) {
                 if (err) throw err;

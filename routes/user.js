@@ -2,71 +2,15 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const pool = require('../libs/mysql-connect');
-const cryptPassword = require('../libs/cryptPassword');
-const {validationResult, body} = require('express-validator/check');
-const {sanitizeBody} = require('express-validator/filter');
+const { validationResult } = require('express-validator/check');
 const protect = require('../libs/authorization');
-
-const registrationChecker = [
-    body('username').isLength({min: 3, max: 20}).withMessage('логин мин 3 макс 20 символов'),
-    body('username').custom(async (value, {req}) => {
-
-        await pool.query(`SELECT username
-                          FROM users
-                          WHERE username = :username`, {username: req.body.username})
-            .then(rows => {
-                if (rows.length !== 0) {
-                    throw new Error('Такой логин уже занят');
-                }
-            })
-
-    }),
-    body('email').isEmail().withMessage('email не соответствует шаблону'),
-    body('email').custom(async (value, {req}) => {
-
-        await pool.query(`SELECT email
-                          FROM users
-                          WHERE email = :email`, {email: req.body.email})
-            .then(rows => {
-                if (rows.length !== 0) {
-                    throw new Error('Email уже занят');
-                }
-            })
-
-    }),
-    body('password').isLength({min: 6}).withMessage('пароль минимум 6 символов'),
-    body('repassword').custom((value, {req}) => {
-        if (value !== req.body.password) {
-            throw new Error('Пароли не совпадают');
-        }
-        return true;
-    }),
-    sanitizeBody('password').customSanitizer(value => {
-        return cryptPassword(value);
-    }),
-];
-
-const profileChecker = [
-    body('phone').isMobilePhone('ru-RU').withMessage('номер телефона введе неверно'),
-    body('fullname'),
-    body('password').isLength({min: 6}).withMessage('пароль минимум 6 символов').optional(),
-    body('repassword').custom((value, {req}) => {
-        if (value !== req.body.password) {
-            throw new Error('Пароли не совпадают');
-        }
-        return true;
-    }).optional(),
-    sanitizeBody('password').customSanitizer(value => {
-        return cryptPassword(value);
-    }),
-
-];
+const { registrationChecker, profileChecker } = require('./validator')
 
 router
     .post('/login', passport.authenticate('local', {
-            successRedirect: '/',
-            failureRedirect: '/user/login',
-        }
+        successRedirect: '/',
+        failureRedirect: '/user/login',
+    }
     ), function (req, res) {
         // If this function gets called, authentication was successful.
         // `req.user` contains the authenticated user.
@@ -79,14 +23,32 @@ router
     })
     .get('/profile', protect((req) => req.ability.can('read', 'Profile')), function (req, res) {
 
-        res.render('profile', {user: req.user});
+        res.render('profile', { user: req.user });
+    })
+    .get('/:id', function (req, res) {
+        const sql = `
+            SELECT id, username, fullname, email, phone, role, money, isactive 
+            FROM users
+            WHERE id = :userId
+      `;
+
+        pool.query(sql, { userId: req.params.id }, function (err, rows) {
+            if (err) throw err;
+
+            res.format({
+                'application/json': function () {
+                    res.header('Access-Control-Allow-Origin', '*');
+                    res.json(rows[0]);
+                }
+            })
+        })
     })
     .put('/profile', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
 
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            return res.status(422).json({errors: errors.array()});
+            return res.status(422).json({ errors: errors.array() });
         }
 
         const whiteList = ['phone', 'fullname'];
@@ -94,6 +56,7 @@ router
 
         const body = {};
         whiteList.forEach(item => {
+            if (!req.body[item]) return
             body[item] = req.body[item]
         });
 
@@ -103,7 +66,7 @@ router
           WHERE id = :userId
         `;
 
-        pool.query(sql, {body, userId: req.user.id}, function (err, results, fields) {
+        pool.query(sql, { body, userId: req.user.id }, function (err, results, fields) {
             if (err) throw err;
 
             res.send();
@@ -114,7 +77,7 @@ router
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            return res.status(422).json({errors: errors.array()});
+            return res.status(422).json({ errors: errors.array() });
         }
 
         const whiteList = ['username', 'email', 'password'];
@@ -126,11 +89,12 @@ router
 
         const body = {};
         whiteList.forEach(item => {
+            if (!req.body[item]) return
             body[item] = req.body[item]
         });
         body['role'] = 2;
 
-        pool.query(sql, {body}, function (err, results, fields) {
+        pool.query(sql, { body }, function (err, results, fields) {
             if (err) throw err;
 
             res.send();
