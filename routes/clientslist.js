@@ -88,7 +88,7 @@ router
             res.send({});
         })
     })
-    .delete('/:id', function (req, res) {
+    .delete('/:id', protect((req) => req.ability.can('update', 'Profile')), function (req, res) {
 
         const sql = `
             DELETE FROM users
