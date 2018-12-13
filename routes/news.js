@@ -21,15 +21,29 @@ router
         pool.query(sql, function (err, rows) {
             if (err) throw err;
 
-            const newsList = rows.map(item => {
+            const newsList = rows.map(item => ({ ...item, fromTo: getFromToMonth(item.from, item.to) }))
 
-                return {
-                    ...item,
-                    fromTo: getFromToMonth(item.from, item.to)
-                }
-            })
-            
-            res.render('news', { newsList });
+            pool.query(sql, function (err, rows) {
+                if (err) throw err;
+
+                res.format({
+                    'text/plain': function () {
+                        res.send(newsList);
+                    },
+                    'text/html': function () {
+                        res.render('news', { newsList });
+                    },
+                    'application/json': function () {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.json(newsList);
+                    },
+
+                    'default': function () {
+                        // log the request and respond with 406
+                        res.status(406).send('Not Acceptable');
+                    }
+                });
+            });
         });
     });
 
