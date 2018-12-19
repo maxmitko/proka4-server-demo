@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const emailSender = require('../libs/email');
 const pug = require('pug');
+const logger = require('../libs/logger')
 
 router
     .post('/', (req, res) => {
@@ -15,7 +16,7 @@ router
         `;
 
         pool.query(sql, {body}, function (err, okPacket) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             const emailBody = pug.renderFile('views/appointment-email.pug', {
                 data: req.body,

@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const router = express.Router();
+const logger = require('../libs/logger')
 
 router
     .get('/', async (req, res) => {
@@ -15,7 +16,7 @@ router
         const scheduleTypes = await pool.query(schdl_type_sql);
         
         pool.query(schday_sql, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             const scheduleChunkByType = [];
             scheduleTypes.forEach(schdl_type => {

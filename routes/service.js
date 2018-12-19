@@ -1,6 +1,7 @@
 const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
+const logger = require('../libs/logger')
 
 router
     .get('/', (req, res) => {
@@ -18,7 +19,7 @@ router
         `;
 
         pool.query(sql, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.format({
                 'text/plain': function(){
@@ -54,7 +55,7 @@ router
         `;
 
         pool.query(sql, {srvId: req.params.id}, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.render('service-article', {articleList: rows});
         });

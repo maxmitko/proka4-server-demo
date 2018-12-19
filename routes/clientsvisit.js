@@ -1,32 +1,35 @@
 const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
+const logger = require('../libs/logger')
 
 router
     .get('/', function (req, res) {
 
         const sql = `
-    SELECT  srv.id                                      AS 'srv_id',
-            srv.title                                   AS 'srv_title',
-            usr.id                                      AS 'usr_id',
-            usr.fullname                                AS 'usr_full_name',
-            cltv.client_card_id                         AS 'client_card_id',
-            cltc.count                                  AS 'cltc_count',
-            cltv.id                                     AS 'cltv_id',
-            DATE_FORMAT(cltv.time, '%Y-%m-%d %H:%i:%s') AS 'cltv_time',
-            cltv.visit_status                           AS 'cltv_visit_status'
-    FROM client_visit cltv
-        LEFT JOIN service srv ON cltv.service_id = srv.id
-        LEFT JOIN users usr ON cltv.user_id = usr.id
-        LEFT JOIN client_card cltc ON cltv.client_card_id = cltc.id
-    WHERE cltv.time LIKE :datefilter
-    GROUP BY cltv.id
-    `;
+            SELECT  srv.id                                      AS 'srv_id',
+                    srv.title                                   AS 'srv_title',
+                    usr.id                                      AS 'usr_id',
+                    usr.fullname                                AS 'usr_full_name',
+                    cltv.client_card_id                         AS 'client_card_id',
+                    cltc.count                                  AS 'cltc_count',
+                    cltv.id                                     AS 'cltv_id',
+                    DATE_FORMAT(cltv.time, '%Y-%m-%d %H:%i:%s') AS 'cltv_time',
+                    cltv.visit_status                           AS 'cltv_visit_status'
+            FROM client_visit cltv
+                LEFT JOIN service srv ON cltv.service_id = srv.id
+                LEFT JOIN users usr ON cltv.user_id = usr.id
+                LEFT JOIN client_card cltc ON cltv.client_card_id = cltc.id
+            WHERE DATE(cltv.time) LIKE DATE(:datefilter)
+            GROUP BY cltv.id
+        `;
 
-        const datefilter = `${req.query.date}%`;
+        const sqlParams = {
+            datefilter: req.query.date
+        };
 
-        pool.query(sql, { datefilter }, function (err, rows) {
-            if (err) throw err;
+        pool.query(sql, sqlParams, function (err, rows) {
+            if (err) logger.error(err);
 
             res.format({
                 'application/json': function () {
@@ -48,7 +51,7 @@ router
             let body = req.body
 
             connection.beginTransaction(function (err) {
-                if (err) throw err;
+                if (err) logger.error(err);
 
                 const clientBody = body.map(item => {
                     return [item['srv_id'], item['usr_id'], item['client_card_id'], item['cltv_visit_status'], item['cltv_time']]
@@ -60,7 +63,7 @@ router
             `;
 
                 connection.query(sqlClientVisit, { clientBody }, function (err, okPacket) {
-                    if (err) throw err;
+                    if (err) logger.error(err);
 
                     const cardBody = body.map(item => {
                         return [
@@ -77,7 +80,7 @@ router
 
 
                     connection.query(sqlClientCard, { cardBody }, function (err, okPacket) {
-                        if (err) throw err;
+                        if (err) logger.error(err);
 
                         connection.commit(function (err) {
                             if (err) {
@@ -106,7 +109,7 @@ router
             let body = req.body;
 
             connection.beginTransaction(function (err) {
-                if (err) throw err;
+                if (err) logger.error(err);
 
                 const clientBody = body['clientsVisits'].map(item => {
                     return [
@@ -122,7 +125,7 @@ router
             `;
 
                 connection.query(sqlClientVisit, { clientBody }, function (err, okPacket) {
-                    if (err) throw err;
+                    if (err) logger.error(err);
 
                     const cardBody = body['clientsCards'].map(item => {
                         return [
@@ -139,7 +142,7 @@ router
 
 
                     connection.query(sqlClientCard, { cardBody }, function (err, okPacket) {
-                        if (err) throw err;
+                        if (err) logger.error(err);
 
                         connection.commit(function (err) {
                             if (err) {

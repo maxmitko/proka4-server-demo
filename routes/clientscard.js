@@ -1,6 +1,7 @@
 const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
+const logger = require('../libs/logger')
 
 router
     .get('/', function (req, res) {
@@ -23,8 +24,8 @@ router
     `;
 
         pool.query(sql, function (err, rows) {
-            if (err) throw err;
-
+            if (err) logger.error(err);
+            
             res.format({
                 'application/json': function () {
                     res.header('Access-Control-Allow-Origin', '*');

@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const emailSender = require('../libs/email');
 const pug = require('pug');
+const logger = require('../libs/logger')
 
 router
     .get('/', (req, res) => {
@@ -29,7 +30,7 @@ router
             `;
 
             pool.query(sql, {userId: req.user.id}, function (err, rows) {
-                if (err) throw err;
+                if (err) logger.error(err);
 
                 let orderId = new Set();
                 rows.forEach(item => orderId.add(item.id));
@@ -63,7 +64,7 @@ router
 
 
         pool.query(sql, {id: req.params.id, userId: req.user.id}, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.redirect('/shop/order');
         })
@@ -77,7 +78,7 @@ router
             }
 
             connection.beginTransaction(function (err) {
-                if (err) throw err;
+                if (err) logger.error(err);
 
                 const orderSql = `
                   INSERT INTO orders (user_id, rejected, customer, phone)
