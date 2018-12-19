@@ -2,8 +2,9 @@ const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator/check');
-const { registrationChecker, profileChecker } = require('./validator')
+const { registrationChecker, profileChecker } = require('./helpers/validator')
 const protect = require('../libs/authorization');
+const logger = require('../libs/logger')
 
 router
     .get('/', function (req, res) {
@@ -21,7 +22,7 @@ router
         `;
 
         pool.query(sql, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.format({
                 'application/json': function () {
@@ -33,10 +34,10 @@ router
     })
     .put('/', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
 
-        const errors = validationResult(req);
+        const error = validationResult(req);
         
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+        if (!error.isEmpty()) {
+            return res.status(422).json({ error: error.array() });
         }
 
         const whiteList = ['username', 'phone', 'fullname', 'email', 'money'];
@@ -55,17 +56,17 @@ router
         `;
 
         pool.query(sql, { body, userId: req.body.id }, function (err, results, fields) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
-            res.send({});
+            res.send();
         })
     })
     .post('/', registrationChecker, function (req, res) {
 
-        const errors = validationResult(req);
+        const error = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+        if (!error.isEmpty()) {
+            return res.status(422).json({ error: error.array() });
         }
 
         const whiteList = ['username', 'phone', 'fullname', 'email', 'money', 'password'];
@@ -83,9 +84,9 @@ router
         `;
 
         pool.query(sql, { body }, function (err, results, fields) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
-            res.send({});
+            res.send();
         })
     })
     .delete('/:id', protect((req) => req.ability.can('update', 'Profile')), function (req, res) {
@@ -96,7 +97,7 @@ router
         `;
 
         pool.query(sql, { userId: req.params.id }, function (err, results, fields) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.send();
         })

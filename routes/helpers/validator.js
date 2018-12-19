@@ -1,7 +1,7 @@
-const cryptPassword = require('../libs/cryptPassword');
+const cryptPassword = require('../../libs/cryptPassword');
 const { sanitizeBody } = require('express-validator/filter');
 const { body } = require('express-validator/check');
-const pool = require('../libs/mysql-connect');
+const pool = require('../../libs/mysql-connect');
 
 module.exports.registrationChecker = [
     body('username').isLength({ min: 3, max: 20 }).withMessage('логин мин 3 макс 20 символов'),
@@ -38,9 +38,7 @@ module.exports.registrationChecker = [
         }
         return true;
     }),
-    sanitizeBody('password').customSanitizer(value => {
-        return cryptPassword(value);
-    }),
+    sanitizeBody('password').customSanitizer(cryptPassword),
 ];
 
 module.exports.profileChecker = [
@@ -53,7 +51,10 @@ module.exports.profileChecker = [
         }
         return true;
     }).optional(),
-    sanitizeBody('password').customSanitizer(value => {
-        return cryptPassword(value);
-    }),
+    sanitizeBody('password').customSanitizer(cryptPassword),
+];
+
+module.exports.newsChecker = [
+    body('id').toInt().exists(),
+    body(['title', 'content', 'topic', 'from', 'to']).trim().exists(),
 ];

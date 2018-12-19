@@ -4,7 +4,8 @@ const passport = require('passport');
 const pool = require('../libs/mysql-connect');
 const { validationResult } = require('express-validator/check');
 const protect = require('../libs/authorization');
-const { registrationChecker, profileChecker } = require('./validator')
+const { registrationChecker, profileChecker } = require('./helpers/validator')
+const logger = require('../libs/logger')
 
 router
     .post('/login', passport.authenticate('local', {
@@ -33,7 +34,7 @@ router
       `;
 
         pool.query(sql, { userId: req.params.id }, function (err, rows) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.format({
                 'application/json': function () {
@@ -45,10 +46,10 @@ router
     })
     .put('/profile', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
 
-        const errors = validationResult(req);
+        const error = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+        if (!error.isEmpty()) {
+            return res.status(422).json({ error: error.array() });
         }
 
         const whiteList = ['phone', 'fullname'];
@@ -67,17 +68,17 @@ router
         `;
 
         pool.query(sql, { body, userId: req.user.id }, function (err, results, fields) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.send();
         })
     })
     .post('/registration', registrationChecker, function (req, res) {
 
-        const errors = validationResult(req);
+        const error = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+        if (!error.isEmpty()) {
+            return res.status(422).json({ error: error.array() });
         }
 
         const whiteList = ['username', 'email', 'password'];
@@ -95,7 +96,7 @@ router
         body['role'] = 2;
 
         pool.query(sql, { body }, function (err, results, fields) {
-            if (err) throw err;
+            if (err) logger.error(err);
 
             res.send();
         })

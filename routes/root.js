@@ -8,7 +8,7 @@ const user = require('./user');
 const admin = require('./admin');
 const clientscard = require('./clientscard');
 const clientsvisit = require('./clientsvisit');
-const clientslist = require('./clientslist');
+const users = require('./users');
 const order = require('./order');
 const appointment = require('./appointment');
 const protect = require('../libs/authorization');
@@ -34,7 +34,7 @@ module.exports = function (app) {
     app.use('/admin', protect((req) => req.ability.can('manage', 'Admin')), admin);
     app.use('/admin/clientscard', clientscard);
     app.use('/admin/clientsvisit', clientsvisit);
-    app.use('/admin/clientslist', clientslist);
+    app.use('/admin/users', users);
     app.use('/news', news);
     app.use('/service', service);
     app.use('/schedule', schedule);

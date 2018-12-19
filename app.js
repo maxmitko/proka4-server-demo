@@ -10,6 +10,8 @@ const upload = multer();
 const casl = require('./libs/casl');
 const config = require('./libs/myconfig')
 const favicon = require('serve-favicon');
+const errorHandler = require('./libs/errorHandler');
+const session = require('./libs/session')
 
 // parse body application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,7 +30,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(favicon(path.join(__dirname, 'public', 'img', 'favicon.ico')));
 
 // authentication module
-require('./libs/session')(app);
+app.use(session);
 require('./libs/passport')(app);
 
 // permission module
@@ -36,18 +38,18 @@ app.use(casl);
 
 // work only with NODE_ENV=development
 require('./libs/cors')(app);
-
 require('./libs/email');
 require('./routes/root')(app);
 
+app.use(errorHandler);
+
 http.createServer(app).listen(config.server.port);
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     const https = require('https');
     const httpsOptions = {
         key: fs.readFileSync('/etc/ssl/private/proka4-https.key'),
         cert: fs.readFileSync('/etc/ssl/private/proka4-https.crt')
     };
-
     https.createServer(httpsOptions, app).listen(443);
 }
