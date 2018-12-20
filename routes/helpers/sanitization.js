@@ -1,5 +1,5 @@
-module.exports.blackListFilter = (list, obj) => {
-    const body = { ...obj };
-    list.forEach(item => delete body[item])
+module.exports.whiteListFilter = (list, obj) => {
+    const body = {};
+    list.forEach(item => body[item] = obj[item])
     return body;
 }

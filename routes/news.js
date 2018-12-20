@@ -7,14 +7,14 @@ const adminAccess = protect(req => req.ability.can('update', 'Profile'))
 const { validationResult } = require('express-validator/check');
 const { newsChecker } = require('./helpers/validator')
 const logger = require('../libs/logger');
-const { blackListFilter } = require('./helpers/sanitization')
+const { whiteListFilter } = require('./helpers/sanitization')
 
 router
     .get('/', (req, res) => {
 
         const sql = `
-          SELECT * FROM news
-          ORDER BY 'from' DESC
+          SELECT id, title, content, topic, start_date, end_date, link_hash FROM news
+          ORDER BY start_date DESC
         `;
 
         pool.query(sql, function (err, rows) {
@@ -42,7 +42,8 @@ router
 
         const sql = `
             SELECT * FROM news
-            WHERE id > :cursor
+            WHERE id < :cursor
+            ORDER BY id DESC
             LIMIT :limit
             `;
 
@@ -117,7 +118,7 @@ router
         `;
 
         const sqlParams = {
-            body: blackListFilter(['id', 'fromTo'], req.body),
+            body: whiteListFilter(['title', 'content', 'topic', 'from', 'to'], req.body),
             id: Number(req.body.id),
         }
 
@@ -139,7 +140,7 @@ router
         `;
 
         const sqlParams = {
-            body: blackListFilter(['id', 'fromTo'], req.body),
+            body: whiteListFilter(['title', 'content', 'topic', 'from', 'to'], req.body),
         }
 
         pool.query(sql, sqlParams, function (err, OkPacket, fields) {
