@@ -8,31 +8,20 @@ const { validationResult } = require('express-validator/check');
 const { newsChecker } = require('./helpers/validator')
 const logger = require('../libs/logger');
 const { whiteListFilter } = require('./helpers/sanitization')
+const Api = require('../api/news')
 
 router
-    .get('/', (req, res) => {
+    .get('/', async (req, res) => {
 
-        const sql = `
-          SELECT id, title, content, topic, start_date, end_date, link_hash FROM news
-          ORDER BY start_date DESC
-        `;
+        const data = await Api.getList()
 
-        pool.query(sql, function (err, rows) {
-            if (err) logger.error(err);
-            const newsList = rows.map(item => ({ ...item, fromTo: getFromToMonth(item.from, item.to) }))
-
-            res.format({
-                'text/html': function () {
-                    res.render('news', { newsList })
-                },
-                'application/json': function () {
-                    res.header('Access-Control-Allow-Origin', '*');
-                    res.json(newsList);
-                },
-                'default': function () {
-                    res.status(406).send('Not Acceptable')
-                }
-            });
+        res.format({
+            html: () => { res.render('news', { newsList }) },
+            json: () => {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.json(data);
+            },
+            default: () => { res.status(406).send('Not Acceptable') }
         });
     })
     .get('/range', async function (req, res) {
@@ -40,44 +29,35 @@ router
         const reqCount = await pool.query('SELECT COUNT(*) AS count FROM news');
         const count = reqCount[0].count
 
-        const sql = `
-            SELECT * FROM news
-            WHERE id < :cursor
-            ORDER BY id DESC
-            LIMIT :limit
-            `;
-
-        const { limit, cursor } = req.query
-
-        const sqlParams = {
-            cursor: Number(cursor),
-            limit: Number(limit),
-        }
-
-        pool.query(sql, sqlParams, function (err, rows, fields) {
-            if (err) logger.error(err);
-
-            const newsList = rows.map(item => ({ ...item, fromTo: getFromToMonth(item.from, item.to) }))
-
-            const data = {
-                count: newsList.length,
-                totalCount: count,
-                newsList,
-            }
-
-            res.format({
-                'text/html': function () {
-                    res.render('news', data)
-                },
-                'application/json': function () {
-                    res.header('Access-Control-Allow-Origin', '*');
-                    res.json(data);
-                },
-                'default': function () {
-                    res.status(406).send('Not Acceptable')
-                }
-            });
+        const newsList = await Api.getByRange({
+            limit: Number(req.query.limit),
+            offset: Number(req.query.offset),
         })
+
+        const data = { totalCount: count, data: newsList }
+
+        res.format({
+            json: () => {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.json(data);
+            },
+            default: () => { res.status(406).send('Not Acceptable') }
+        });
+    })
+    .get('/cursor', async function (req, res) {
+
+        const data = await Api.getByCursor({
+            limit: Number(req.query.limit),
+            cursor: Number(req.query.cursor),
+        })
+
+        res.format({
+            json: () => {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.json(data);
+            },
+            default: () => { res.status(406).send('Not Acceptable') }
+        });
     })
     .get('/:id', function (req, res, next) {
 
