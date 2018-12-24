@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const config = require('./myconfig');
 const util = require('util');
+const logger = require('./logger')
 
 const pool = mysql.createPool(config.db);
 
@@ -21,7 +22,8 @@ pool.config.connectionConfig.queryFormat = function (query, values) {
         return txt;
     }.bind(this));
 
-    // console.log(result);
+    if (process.env.NODE_ENV !== 'production') logger.info(result)
+    
     return result;
 };
 

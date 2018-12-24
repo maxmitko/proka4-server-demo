@@ -12,6 +12,8 @@ const config = require('./libs/myconfig')
 const favicon = require('serve-favicon');
 const errorHandler = require('./libs/errorHandler');
 const session = require('./libs/session')
+const httpsRedirect = require('./libs/httpsRedirect')
+const localsFiller = require('./libs/localsFiller')
 
 // parse body application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,9 +38,12 @@ require('./libs/passport')(app);
 // permission module
 app.use(casl);
 
-// work only with NODE_ENV=development
+// cors work only with NODE_ENV=development
 require('./libs/cors')(app);
-require('./libs/email');
+
+app.use(localsFiller);
+app.use(httpsRedirect);
+
 require('./routes/root')(app);
 
 app.use(errorHandler);
