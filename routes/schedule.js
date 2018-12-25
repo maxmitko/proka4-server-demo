@@ -8,13 +8,45 @@ const logger = require('../libs/logger')
 router
     .get('/', async (req, res) => {
 
-        const schdl_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schdl-list.sql'), {encoding: 'UTF-8'})
-        const schdl_type_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schdl-type-list.sql'), {encoding: 'UTF-8'})
-        const schday_sql = fs.readFileSync(path.join(__dirname, 'sql', 'schday-list.sql'), {encoding: 'UTF-8'})
-        
+        const schdl_sql = `
+            SELECT
+                id,
+                color,
+                title,
+                type,
+                DATE_FORMAT(startday, '%d.%m') AS startday,
+                DATE_FORMAT(finishday, '%d.%m') AS finishday
+            FROM
+                schedule
+            WHERE
+                isactive = 1
+
+        `
+        const schdl_type_sql = `SELECT * FROM schedule_type WHERE isactive = 1`
+        const schday_sql = `
+            SELECT
+                schday.id AS schday_id,
+                schday.mon AS mon,
+                schday.tue AS tue,
+                schday.wed AS wed,
+                schday.thu AS thu,
+                schday.fri AS fri,
+                schday.sut AS sut,
+                schday.sun AS sun,
+                schdl.type AS type,
+                tmlst.id AS 'tmlst_id',
+                SUBSTRING(tmlst.title, 1, 5) AS 'tmlst_title'
+            FROM
+                schedule_day schday
+                LEFT JOIN schedule schdl ON schday.schedule_id = schdl.id
+                LEFT JOIN time_list tmlst ON schday.time_list_id = tmlst.id
+            ORDER BY
+                tmlst.title
+        `
+
         const schedule = await pool.query(schdl_sql);
         const scheduleTypes = await pool.query(schdl_type_sql);
-        
+
         pool.query(schday_sql, function (err, rows) {
             if (err) logger.error(err);
 
@@ -24,7 +56,7 @@ router
                 let items = rows.filter(item => {
                     return (item.type === schdl_type.id);
                 });
-                
+
                 let mergedByTime = [];
                 items.reduce((acc, item) => {
                     if (acc.tmlst_id === item.tmlst_id) {
@@ -51,15 +83,25 @@ router
                     colors[item.id] = item.color;
                 });
 
-                scheduleChunkByType.push({items: mergedByTime, schedule: scheduleByType, colors})
+                scheduleChunkByType.push({ items: mergedByTime, schedule: scheduleByType, colors })
             });
-            
-            res.render('schedule', {scheduleChunkByType});
+
+            res.render('schedule', { scheduleChunkByType });
         });
     })
     .get('/timelist', (req, res) => {
 
-        const time_list_sql = fs.readFileSync(path.join(__dirname, 'sql', 'time-list.sql'), {encoding: 'UTF-8'});
+        const time_list_sql = `
+            SELECT
+                id,
+                SUBSTRING(title, 1, 5) AS title
+            FROM
+                time_list
+            WHERE
+                isactive = 1
+            ORDER BY
+                title
+        `
 
         pool.query(time_list_sql, function (err, rows) {
 
