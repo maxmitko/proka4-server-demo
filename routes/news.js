@@ -1,153 +1,106 @@
 const pool = require('../libs/mysql-connect');
-const getFromToMonth = require('../libs/formatDate').getFromToMonth;
 const express = require('express');
 const router = express.Router();
 const protect = require('../libs/authorization');
 const adminAccess = protect(req => req.ability.can('update', 'Profile'))
 const { validationResult } = require('express-validator/check');
-const { newsChecker } = require('./helpers/validator')
-const logger = require('../libs/logger');
-const { whiteListFilter } = require('./helpers/sanitization')
-const Api = require('../api/news')
+const { matchedData } = require('express-validator/filter');
+const { news: validate } = require('./helpers/validator')
+const api = require('../api/news')
 
 router
-    .get('/', async (req, res) => {
-
-        const data = await Api.getList()
-
-        res.format({
-            html: () => { res.render('news', { newsList }) },
-            json: () => {
-                res.header('Access-Control-Allow-Origin', '*');
-                res.json(data);
-            },
-            default: () => { res.status(406).send('Not Acceptable') }
-        });
-    })
-    .get('/range', async function (req, res) {
-
-        const reqCount = await pool.query('SELECT COUNT(*) AS count FROM news');
-        const count = reqCount[0].count
-
-        const newsList = await Api.getByRange({
-            limit: Number(req.query.limit),
-            offset: Number(req.query.offset),
-        })
-
-        const data = { totalCount: count, data: newsList }
-
-        res.format({
-            json: () => {
-                res.header('Access-Control-Allow-Origin', '*');
-                res.json(data);
-            },
-            default: () => { res.status(406).send('Not Acceptable') }
-        });
-    })
-    .get('/cursor', async function (req, res) {
-
-        const data = await Api.getByCursor({
-            limit: Number(req.query.limit),
-            cursor: Number(req.query.cursor),
-        })
-
-        res.format({
-            json: () => {
-                res.header('Access-Control-Allow-Origin', '*');
-                res.json(data);
-            },
-            default: () => { res.status(406).send('Not Acceptable') }
-        });
-    })
-    .get('/:id', function (req, res, next) {
-
-        const sql = `
-            SELECT * FROM news
-            WHERE id = :id
-        `;
-
-        const sqlParams = {
-            id: Number(req.params.id),
-        }
-
-        pool.query(sql, sqlParams, function (err, rows, fields) {
-            if (err) logger.error(err);
-
-            const news = { ...rows[0], fromTo: getFromToMonth(rows[0].from, rows[0].to) }
+    .get('/', async (req, res, next) => {
+        try {
+            const data = await api.getList()
 
             res.format({
-                'application/json': function () {
-                    res.header('Access-Control-Allow-Origin', '*');
-                    res.json(news);
-                },
-                'default': function () {
-                    res.status(406).send('Not Acceptable')
-                }
+                html: () => res.render('news', { newsList: data }),
+                json: () => res.json(data),
             });
-        })
-    })
-    .put('/', adminAccess, newsChecker, function (req, res) {
 
-        const error = validationResult(req);
-        if (!error.isEmpty()) return res.status(422).json({ error: error.array() })
-
-        const sql = `
-          UPDATE news
-          SET :body
-          WHERE id = :id
-        `;
-
-        const sqlParams = {
-            body: whiteListFilter(['title', 'content', 'topic', 'from', 'to'], req.body),
-            id: Number(req.body.id),
+        } catch (err) {
+            next(err)
         }
-
-        pool.query(sql, sqlParams, function (err, OkPacket, fields) {
-            if (err) logger.error(err);
-
-            res.send();
-        })
-
     })
-    .post('/', adminAccess, newsChecker, function (req, res) {
+    .get('/:id', validate.id, async (req, res, next) => {
+        try {
+            const data = await api.getById(req.params.id)
 
-        const error = validationResult(req);
-        if (!error.isEmpty()) return res.status(422).json({ error: error.array() })
+            res.format({
+                json: () => res.json(data)
+            });
 
-        const sql = `
-          INSERT INTO news
-          SET :body
-        `;
-
-        const sqlParams = {
-            body: whiteListFilter(['title', 'content', 'topic', 'from', 'to'], req.body),
+        } catch (err) {
+            next(err)
         }
-
-        pool.query(sql, sqlParams, function (err, OkPacket, fields) {
-            if (err) logger.error(err);
-
-            res.send();
-        })
     })
-    .delete('/:id', adminAccess, function (req, res) {
+    .get('/range/:limit/:offset', validate.getRange, async (req, res, next) => {
+        try {
+            validationResult(req).throw();
 
-        const sql = `
-            DELETE FROM news
-            WHERE id = :id
-        `;
+            const reqCount = await pool.query('SELECT COUNT(*) AS count FROM news');
+            const count = reqCount[0].count
 
-        const sqlParams = {
-            id: Number(req.params.id),
+            const newsList = await api.getByRange(req.params.limit, req.params.offset)
+            const data = { totalCount: count, data: newsList }
+
+            res.format({
+                json: () => res.json(data)
+            });
+
+        } catch (err) {
+            next(err)
         }
+    })
+    .get('/cursor/:limit/:cursor', validate.getByCursor, async (req, res, next) => {
+        try {
+            validationResult(req).throw();
 
-        pool.query(sql, sqlParams, function (err, OkPacket, fields) {
-            if (err) logger.error(err);
+            const data = await api.getByCursor(req.params.limit, req.params.cursor)
 
-            res.send();
-        })
+            res.format({
+                json: () => res.json(data),
+            });
+
+        } catch (err) {
+            next(err)
+        }
+    })
+    .put('/', adminAccess, validate.update, async (req, res, next) => {
+        try {
+            validationResult(req).throw();
+            const data = matchedData(req, { onlyValidData: true });
+
+            await api.put(data)
+            res.send()
+
+        } catch (err) {
+            next(err)
+        }
+    })
+    .post('/', adminAccess, validate.create, async (req, res, next) => {
+        try {
+            validationResult(req).throw();
+            const data = matchedData(req, { onlyValidData: true });
+
+            await api.post(data)
+            res.send()
+
+        } catch (err) {
+            next(err)
+        }
+    })
+    .delete('/:id', adminAccess, validate.id, async (req, res, next) => {
+        try {
+            validationResult(req).throw();
+
+            await api.del(req.params.id)
+            res.send()
+
+        } catch (err) {
+            next(err)
+        }
     });
 
 
 module.exports = router;
-
-

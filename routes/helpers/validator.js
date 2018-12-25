@@ -1,9 +1,9 @@
 const cryptPassword = require('../../libs/cryptPassword');
 const { sanitizeBody } = require('express-validator/filter');
-const { body } = require('express-validator/check');
+const { body, param } = require('express-validator/check');
 const pool = require('../../libs/mysql-connect');
 
-module.exports.registrationChecker = [
+module.exports.signup = [
     body('username').isLength({ min: 3, max: 20 }).withMessage('логин мин 3 макс 20 символов'),
     body('phone').isMobilePhone('ru-RU').withMessage('номер телефона введен неверно').optional(),
     body('username').custom(async (value, { req }) => {
@@ -41,7 +41,7 @@ module.exports.registrationChecker = [
     sanitizeBody('password').customSanitizer(cryptPassword),
 ];
 
-module.exports.profileChecker = [
+module.exports.signin = [
     body('phone').isMobilePhone('ru-RU').withMessage('номер телефона введен неверно').optional(),
     body('fullname'),
     body('password').isLength({ min: 6 }).withMessage('пароль минимум 6 символов').optional(),
@@ -54,7 +54,23 @@ module.exports.profileChecker = [
     sanitizeBody('password').customSanitizer(cryptPassword),
 ];
 
-module.exports.newsChecker = [
-    body('id').toInt().exists(),
-    body(['title', 'content', 'topic', 'from', 'to']).trim().exists(),
-];
+
+
+module.exports.news = {
+    getRange: [
+        param(['limit', 'offset']).toInt().isInt().exists(),
+    ],
+    getByCursor: [
+        param(['limit', 'cursor']).toInt().isInt().exists(),
+    ],
+    create: [
+        body(['title', 'content', 'topic', 'start_date', 'end_date']).trim().exists(),
+    ],
+    update: [
+        body('id').isInt().toInt().exists(),
+        body(['title', 'content', 'topic', 'start_date', 'end_date']).trim().exists(),
+    ],
+    id: [
+        param('id').isInt().exists(),
+    ]
+}

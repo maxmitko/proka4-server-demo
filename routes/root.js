@@ -12,6 +12,7 @@ const users = require('./users');
 const order = require('./order');
 const appointment = require('./appointment');
 const protect = require('../libs/authorization');
+const { rootErrHandler } = require('../libs/errorHandlers');
 
 module.exports = function (app) {
     app.use('/', index);
@@ -27,5 +28,6 @@ module.exports = function (app) {
     app.use('/shop/order', order);
     app.use('/user', user);
     app.use('/appointment', appointment);
+    app.use(rootErrHandler)
 };
 

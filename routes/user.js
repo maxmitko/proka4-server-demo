@@ -4,7 +4,7 @@ const passport = require('passport');
 const pool = require('../libs/mysql-connect');
 const { validationResult } = require('express-validator/check');
 const protect = require('../libs/authorization');
-const { registrationChecker, profileChecker } = require('./helpers/validator')
+const validate = require('./helpers/validator')
 const logger = require('../libs/logger')
 
 router
@@ -44,7 +44,7 @@ router
             })
         })
     })
-    .put('/profile', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
+    .put('/profile', protect((req) => req.ability.can('update', 'Profile')), validate.signin, function (req, res) {
 
         const error = validationResult(req);
 
@@ -73,7 +73,7 @@ router
             res.send();
         })
     })
-    .post('/registration', registrationChecker, function (req, res) {
+    .post('/registration', validate.signup, function (req, res) {
 
         const error = validationResult(req);
 

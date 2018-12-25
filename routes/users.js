@@ -2,7 +2,7 @@ const pool = require('../libs/mysql-connect');
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator/check');
-const { registrationChecker, profileChecker } = require('./helpers/validator')
+const validate = require('./helpers/validator')
 const protect = require('../libs/authorization');
 const logger = require('../libs/logger')
 
@@ -32,10 +32,10 @@ router
             })
         })
     })
-    .put('/', protect((req) => req.ability.can('update', 'Profile')), profileChecker, function (req, res) {
+    .put('/', protect((req) => req.ability.can('update', 'Profile')), validate.signin, function (req, res) {
 
         const error = validationResult(req);
-        
+
         if (!error.isEmpty()) {
             return res.status(422).json({ error: error.array() });
         }
@@ -61,7 +61,7 @@ router
             res.send();
         })
     })
-    .post('/', registrationChecker, function (req, res) {
+    .post('/', validate.signup, function (req, res) {
 
         const error = validationResult(req);
 

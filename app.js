@@ -10,7 +10,6 @@ const upload = multer();
 const casl = require('./libs/casl');
 const config = require('./libs/myconfig')
 const favicon = require('serve-favicon');
-const errorHandler = require('./libs/errorHandler');
 const session = require('./libs/session')
 const httpsRedirect = require('./libs/httpsRedirect')
 const localsFiller = require('./libs/localsFiller')
@@ -45,8 +44,6 @@ app.use(localsFiller);
 app.use(httpsRedirect);
 
 require('./routes/root')(app);
-
-app.use(errorHandler);
 
 http.createServer(app).listen(config.server.port);
 
