@@ -38,7 +38,7 @@ router
         try {
             validationResult(req).throw();
 
-            const reqCount = await pool.query('SELECT COUNT(*) AS count FROM news');
+            const reqCount = await api.getCount();
             const count = reqCount[0].count
 
             const newsList = await api.getByRange(req.params.limit, req.params.offset)
@@ -94,7 +94,7 @@ router
         try {
             validationResult(req).throw();
 
-            await api.del(req.params.id)
+            await api.remove(req.params.id)
             res.send()
 
         } catch (err) {

@@ -2,6 +2,15 @@ const pool = require('../libs/mysql-connect');
 const getFromToMonth = require('../libs/formatDate').getFromToMonth;
 const logger = require('../libs/logger');
 
+module.exports.getCount = async () => {
+    try {
+        return await pool.query('SELECT COUNT(*) AS count FROM news');
+
+    } catch (err) {
+        throw err
+    }
+}
+
 module.exports.getList = async () => {
     try {
         const sql = `
@@ -129,7 +138,7 @@ module.exports.post = async body => {
     }
 }
 
-module.exports.del = async id => {
+module.exports.remove = async id => {
     try {
         const sql = `
             DELETE FROM news
