@@ -5,13 +5,13 @@ const protect = require('../libs/authorization');
 const adminAccess = protect(req => req.ability.can('update', 'Profile'))
 const { validationResult } = require('express-validator/check');
 const { matchedData } = require('express-validator/filter');
-const { news: validate } = require('./helpers/validator')
+const { default: validate, news: validateSpecific } = require('./helpers/validator')
 const api = require('../api/news')
 
 router
     .get('/', async (req, res, next) => {
         try {
-            const data = await api.getList()
+            const data = await api.getAll()
 
             res.format({
                 html: () => res.render('news', { newsList: data }),
@@ -66,7 +66,7 @@ router
             next(err)
         }
     })
-    .put('/', adminAccess, validate.update, async (req, res, next) => {
+    .put('/', adminAccess, validateSpecific.update, async (req, res, next) => {
         try {
             validationResult(req).throw();
             const data = matchedData(req, { onlyValidData: true });
@@ -78,7 +78,7 @@ router
             next(err)
         }
     })
-    .post('/', adminAccess, validate.create, async (req, res, next) => {
+    .post('/', adminAccess, validateSpecific.create, async (req, res, next) => {
         try {
             validationResult(req).throw();
             const data = matchedData(req, { onlyValidData: true });

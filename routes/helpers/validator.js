@@ -57,12 +57,6 @@ module.exports.signin = [
 
 
 module.exports.news = {
-    getRange: [
-        param(['limit', 'offset']).toInt().isInt().exists(),
-    ],
-    getByCursor: [
-        param(['limit', 'cursor']).toInt().isInt().exists(),
-    ],
     create: [
         body(['title', 'content', 'topic', 'start_date', 'end_date']).trim().exists(),
     ],
@@ -70,7 +64,17 @@ module.exports.news = {
         body('id').isInt().toInt().exists(),
         body(['title', 'content', 'topic', 'start_date', 'end_date']).trim().exists(),
     ],
+}
+
+module.exports.default = {
+    getRange: [
+        param(['limit', 'offset']).toInt().isInt().exists(),
+    ],
+    getByCursor: [
+        param(['limit', 'cursor']).toInt().isInt().exists(),
+    ],
     id: [
         param('id').isInt().exists(),
     ]
 }
+

@@ -11,7 +11,7 @@ module.exports.getCount = async () => {
     }
 }
 
-module.exports.getList = async () => {
+module.exports.getAll = async () => {
     try {
         const sql = `
             SELECT 
@@ -95,7 +95,15 @@ module.exports.getByCursor = async (limit, cursor) => {
 module.exports.getById = async id => {
     try {
         const sql = `
-            SELECT * FROM news
+            SELECT                 
+                news.id, 
+                title, 
+                content, 
+                topic, 
+                DATE_FORMAT(start_date, '%Y-%m-%d') as start_date, 
+                DATE_FORMAT(end_date, '%Y-%m-%d') as end_date, 
+                link_hash
+            link_hash FROM news
             WHERE id = :id
         `;
 
