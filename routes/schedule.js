@@ -22,7 +22,22 @@ router
                 isactive = 1
 
         `
-        const schdl_type_sql = `SELECT * FROM schedule_type WHERE isactive = 1`
+
+        const schdl_type_sql = `
+            SELECT 
+                schtype.id AS id,
+                sch.startday AS startday
+            FROM 
+                schedule_type schtype
+                LEFT JOIN schedule sch ON sch.type = schtype.id
+            WHERE 
+                schtype.isactive = 1
+            GROUP BY
+                schtype.id
+            ORDER BY
+                sch.startday
+        `
+
         const schday_sql = `
             SELECT
                 schday.id AS schday_id,
@@ -52,7 +67,7 @@ router
 
             const scheduleChunkByType = [];
             scheduleTypes.forEach(schdl_type => {
-
+                
                 let items = rows.filter(item => {
                     return (item.type === schdl_type.id);
                 });
@@ -85,7 +100,8 @@ router
 
                 scheduleChunkByType.push({ items: mergedByTime, schedule: scheduleByType, colors })
             });
-
+            console.log(scheduleChunkByType);
+            
             res.render('schedule', { scheduleChunkByType });
         });
     })
