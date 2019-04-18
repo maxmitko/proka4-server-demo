@@ -14,11 +14,11 @@ block page-main
                     li.catalog__item
                         a(href=`/shop/product/${item.id}`)
                             .catalog__img-wrapper
-                                img(src=`img/catalog/preview/${item.image}`)
+                                img(src=`/images/catalog/product/${item.image}`)
                             h3
-                                span.catalog__category= item.grp_title
-                                span.catalog__item-title= item.prod_title
-                                span= item.prod_taste
+                                span.catalog__item-title= item.title
+                                if item.properties.length
+                                    span= item.properties.filter(item => item.type.title === "Вкус").map(item => item.description).join(", ")
                         .item-price.catalog__item-price
                             span.item-price__count= item.price + ' р'
                             button.item-price__button.button(data-product-id=`${item.id}`) в корзину

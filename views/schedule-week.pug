@@ -1,0 +1,76 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Расписание
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item Расписание
+        section.schedule
+            each sheduleChunk in data
+                - var idSet = [...new Set(sheduleChunk.map(item => item.scheduleList.id))]
+                - var schedules = idSet.map(id => sheduleChunk.find(s => s.scheduleList.id === id))
+                ul.schedule__filter-list
+                    each item in schedules
+                        li.schedule__filter-item
+                            label.checkbox-my(data-id=`${item.scheduleList.id}`)
+                                input.visually-hidden(type='checkbox', name='bodyflex' checked)
+                                span.checkbox-my__border
+                                span.checkbox-my__marker.checkbox-my__marker--square(style=`background-color: ${item.scheduleList.color}`)
+                                | !{item.scheduleList.title + " "}
+                                if (item.scheduleList.startDate)
+                                    time.schedule__filter-time
+                                        | с !{item.scheduleList.startDate} по !{item.scheduleList.endDate}
+                                else
+                                    time.schedule__filter-time
+                                        | еженедельно
+                table.schedule__table
+                    thead
+                        tr.schedule__row
+                            td
+                            td пн
+                            td вт
+                            td ср
+                            td чт
+                            td пт
+                            td сб
+                            td вс
+                    tbody
+                        each row in sheduleChunk
+                            tr.schedule__row
+                                td= row.timeList.title
+                                if row.weekDays[0]
+                                    td.schedule__mark(data-id=`${row.weekDays[0].id}`)
+                                        span(style=`background-color: ${row.weekDays[0].color}`)
+                                else
+                                    td
+                                if row.weekDays[1]
+                                    td.schedule__mark(data-id=`${row.weekDays[1].id}`)
+                                        span(style=`background-color: ${row.weekDays[1].color}`)
+                                else
+                                    td
+                                if row.weekDays[2]
+                                    td.schedule__mark(data-id=`${row.weekDays[2].id}`)
+                                        span(style=`background-color: ${row.weekDays[2].color}`)
+                                else
+                                    td
+                                if row.weekDays[3]
+                                    td.schedule__mark(data-id=`${row.weekDays[3].id}`)
+                                        span(style=`background-color: ${row.weekDays[3].color}`)
+                                else
+                                    td
+                                if row.weekDays[4]
+                                    td.schedule__mark(data-id=`${row.weekDays[4].id}`)
+                                        span(style=`background-color: ${row.weekDays[4].color}`)
+                                else
+                                    td
+                                if row.weekDays[5]
+                                    td.schedule__mark(data-id=`${row.weekDays[5].id}`)
+                                        span(style=`background-color: ${row.weekDays[5].color}`)
+                                else
+                                    td
+                                if row.weekDays[6]
+                                    td.schedule__mark(data-id=`${row.weekDays[6].id}`)
+                                        span(style=`background-color: ${row.weekDays[6].color}`)
+                                else
+                                    td

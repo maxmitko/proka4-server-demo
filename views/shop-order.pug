@@ -1,0 +1,40 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1 Список заказов
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item(href='/shop') Магазин
+            a.breadcrumbs__item Корзина
+        div.order#new-order
+            h2.order__title Новый заказ
+            table.order__list
+            //div.order__total Итого:
+            //    span
+            //    |  0
+            p.informer
+            div.order__btn-wrapper
+                button.button.order__remove-btn Очистить
+                a.button.order__place-btn.button--green(href='/shop/order/place') Заказать
+        if orders
+            each item in orders
+                if item[0].order.timeDone === null
+                    div.order
+                        h2.order__title
+                            | Выполняется
+                        span.order__time=  ` Заказ от ${item[0].order.timeAdd}`
+                        table.order__list
+                            include includes/order/order-list
+                        a.button.order__btn.order__cancel-btn(href=`/shop/order/reject/${item[0].order.id}`) Отменить заказ
+                else
+                    div.order.order--done
+                        h2.order__title
+                            | Завершено
+                        span.order__time= ` Заказ от ${item[0].order.timeAdd} закрыт ${item[0].order.timeDone}`
+                        table.order__list
+                            include includes/order/order-list
+append page-modals
+    include includes/order/send-order
+
+

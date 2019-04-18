@@ -4,11 +4,11 @@ thead
         td стоимость
         td количество
     tbody
-        each row in order
+        each row in item
             tr.order__item
-                if row.prod_taste
-                    td= `${row.prod_title} (${row.prod_taste})`
+                if row.product.properties.length
+                    td= `${row.product.title} (${row.product.properties.map(item => item.description).join(', ')})`
                 else
-                    td= `${row.prod_title}`
-                td= `${row.total} р`
+                    td= `${row.product.title}`
+                td= `${row.product.price * row.count} р`
                 td= row.count

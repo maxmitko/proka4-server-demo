@@ -1,0 +1,12 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1= data.title
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item(href='/service') Услуги
+            a.breadcrumbs__item= data.title
+        article.article.page-main-inner__article
+                h2= data.title
+                != data.description

@@ -9,7 +9,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   color: #292929;
-  background-image: url("/img/bg-index.jpg"), linear-gradient(to bottom, #a3a3a3, #f8f5f2 40%);
+  background-image: url("/images/bg-index.jpg"), linear-gradient(to bottom, #a3a3a3, #f8f5f2 40%);
   background-size: auto;
   background-position: center top;
   background-repeat: no-repeat;
@@ -129,7 +129,7 @@ figure {
     content: "";
     width: 8px;
     height: 278px;
-    background-image: url("/img/column-devider.png");
+    background-image: url("/images/column-devider.png");
     position: absolute;
     align-self: center; }
 
@@ -205,7 +205,8 @@ figure {
   width: 100%; }
 
 .main-nav__wrapper {
-  display: flex; }
+  display: flex;
+  margin-bottom: 5px; }
 
 .main-nav__list {
   display: flex;
@@ -221,7 +222,7 @@ figure {
 .main-nav__logo {
   width: 50px;
   height: 50px;
-  background-image: url("/img/logo-bold-p2.png");
+  background-image: url("/images/logo-bold-p2.png");
   background-size: contain;
   background-repeat: no-repeat;
   align-self: center;
@@ -248,20 +249,20 @@ figure {
   margin-left: auto;
   margin-right: 20px; }
 
-.main-nav__item--login-icon {
+.main-nav__item--signin-icon {
   width: 107px;
   box-sizing: border-box;
   text-align: end; }
-  .main-nav__item--login-icon::before {
+  .main-nav__item--signin-icon::before {
     content: "";
     width: 14px;
     height: 14px;
-    background-image: url("/img/login-icon.svg");
+    background-image: url("/images/login-icon.svg");
     position: absolute;
     right: 70px;
     opacity: 0.5;
     top: calc(50% - 7px); }
-  .main-nav__item--login-icon:hover::before, .main-nav__item--login-icon:focus::before, .main-nav__item--login-icon:active::before {
+  .main-nav__item--signin-icon:hover::before, .main-nav__item--signin-icon:focus::before, .main-nav__item--signin-icon:active::before {
     opacity: 1; }
 
 .breadcrumbs__item {
@@ -312,7 +313,7 @@ figure {
       position: absolute;
       left: 50%;
       top: 125%;
-      background-image: url("/img/lightning-icon.png");
+      background-image: url("/images/lightning-icon.png");
       -webkit-transform: translateX(-50%);
               transform: translateX(-50%); }
 
@@ -581,29 +582,29 @@ figure {
   .map iframe {
     border: none !important; }
 
-.login {
+.signin {
   top: 120px;
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
   background-color: #f8f5f2; }
-  .login p {
+  .signin p {
     margin-bottom: 11px; }
-  .login h2 {
+  .signin h2 {
     font-size: 30px;
     line-height: 42px;
     margin: 0;
     margin-bottom: 15px; }
 
-.login__form {
+.signin__form {
   display: flex;
   flex-direction: column;
   width: 300px; }
-  .login__form input {
+  .signin__form input {
     margin-bottom: 9px;
     text-transform: uppercase; }
-  .login__form input[type=text],
-  .login__form input[type=password] {
+  .signin__form input[type=text],
+  .signin__form input[type=password] {
     font: inherit;
     width: 100%;
     height: 43px;
@@ -612,43 +613,43 @@ figure {
     padding: 10px 0;
     padding-left: 15px;
     border: 2px solid black; }
-  .login__form button {
+  .signin__form button {
     width: 100%; }
 
-.login__password-info {
+.signin__password-info {
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
   margin-bottom: 15px; }
 
-.login__restore {
+.signin__restore {
   color: black;
   text-decoration: underline; }
 
-.registration {
+.signup {
   top: 120px;
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
   background-color: #f8f5f2;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
-  .registration p {
+  .signup p {
     margin-bottom: 11px; }
-  .registration h2 {
+  .signup h2 {
     font-size: 30px;
     line-height: 42px;
     margin: 0;
     margin-bottom: 15px; }
 
-.registration__form {
+.signup__form {
   display: flex;
   flex-direction: column;
   width: 300px; }
-  .registration__form input {
+  .signup__form input {
     margin-bottom: 9px;
     text-transform: uppercase; }
-  .registration__form input[type=text],
-  .registration__form input[type=password] {
+  .signup__form input[type=text],
+  .signup__form input[type=password] {
     font: inherit;
     width: 100%;
     height: 43px;
@@ -657,7 +658,7 @@ figure {
     padding: 10px 0;
     padding-left: 15px;
     border: 2px solid black; }
-  .registration__form button {
+  .signup__form button {
     width: 100%; }
 
 .checkbox-my {
@@ -781,7 +782,8 @@ figure {
   justify-content: center;
   background-color: #f7f7f7; }
   .catalog__img-wrapper img {
-    align-self: center; }
+    align-self: center;
+    height: 110px; }
 
 .catalog__category {
   display: block;
@@ -981,31 +983,18 @@ figure {
     text-transform: uppercase; }
   .article p {
     font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
     font-weight: normal;
-    text-transform: none;
-    margin: 5px 0;
-    text-indent: 20px; }
-  .article span {
-    font-family: 'Roboto', Arial, sans-serif;
-    text-indent: 0;
-    text-transform: none;
-    font-weight: normal; }
+    text-transform: none; }
   .article img {
-    margin: 30px auto;
+    margin: 30px 0;
     display: block;
     box-sizing: border-box;
     box-shadow: 0 0 7px rgba(0, 0, 0, 0.25); }
-  .article b {
-    font-family: 'PT Sans Narrow', Arial, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: bold; }
+  .article a:hover {
+    text-decoration: underline; }
   .article strong {
-    font-family: 'PT Sans Narrow', Arial, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: bold;
-    color: #cc0000; }
+    font-family: 'PT Sans Narrow', Arial, sans-serif; }
   .article table {
     border: 2px solid #292929;
     border-collapse: collapse;
@@ -1021,16 +1010,16 @@ figure {
         padding: 0 20px; }
       .article table td:nth-child(2) {
         padding: 0 20px; }
-  .article ul, .article ol {
+  .article ul,
+  .article ol {
     padding-left: 20px;
     font-weight: normal; }
-    .article ul li, .article ol li {
+    .article ul li,
+    .article ol li {
       font-family: 'Open Sans', Arial, sans-serif;
       font-size: 14px;
       line-height: 24px;
       text-transform: none; }
-  .article .red {
-    color: #ff2700; }
 
 .logo {
   display: flex;

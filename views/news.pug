@@ -7,9 +7,9 @@ block page-main
             a.breadcrumbs__item(href='/') Главная
             a.breadcrumbs__item Новости
         .news-article-wrapper
-            each val in newsList
+            each news in data
                 article.article.news-article__item
-                    h2(id=val.link_hash)= val.title
-                    time= val.fromTo
+                    h2(id=news.linkHash)= news.title
+                    time= news.fromTo
                     br
-                    != val.content
+                    != news.content

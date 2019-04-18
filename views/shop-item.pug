@@ -1,0 +1,36 @@
+extends template/inner-page
+
+block page-main
+    main.page-main-inner.container
+        h1= `«${product.title}»`
+        nav.breadcrumbs.page-main-inner__breadcrumbs
+            a.breadcrumbs__item(href='/') Главная
+            a.breadcrumbs__item(href='/shop') Магазин
+            a.breadcrumbs__item= product.title
+        .product
+            a.catalog__basket-btn.button.button--green(href="/shop/order") Корзина (0)
+            figure.product__photos
+                h2.visually-hidden Изображения товара
+                .product__img-wrapper
+                    img(src=`/images/catalog/product/${product.image}`)
+            section.product__info
+                h2.visually-hidden Описание товара
+                .product__description
+                    if product.inStock
+                        p.product__availability Есть в наличии
+                        p.product__count= `${product.count} шт`
+                    else
+                        p.product__availability.product__availability--not-stock Нет в наличии
+                p.product__text
+                    | !{product.description}
+                if product.properties.length
+                    each props in product.properties
+                        ul.product__set
+                            li.product__set-item
+                                != `${props.type.title}:  ${props.description}`
+                if product.categories.length
+                    div.product__category= `КАТЕГОРИИ: ${product.categories.map(item => item.title).join(', ')}`
+                .item-price.product__item-price
+                    span.item-price__count= `${product.price} Р`
+                    button.item-price__button.button(data-product-id=`${product.id}`) в корзину
+

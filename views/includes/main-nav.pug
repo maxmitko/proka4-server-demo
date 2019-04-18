@@ -1,4 +1,4 @@
-- var mainList = {about: 'О центре', news: 'Новости', service: 'Услуги',schedule: 'Расписание',shop: 'Магазин'}
+- var mainList = {about: 'О центре', news: 'Новости', service: 'Услуги и цены', "schedule": 'Расписание',shop: 'Магазин'}
 nav.main-nav
     .main-nav__wrapper.container
         ul.main-nav__list.site-list
@@ -12,15 +12,23 @@ nav.main-nav
                     else
                         a.main-nav__link(href=`/${key}`)
                             span= val
-        if !userName
+        if !user
             ul.main-nav__list.user-list
-                li.main-nav__item.main-nav__item--login-icon
-                    a.main-nav__link(href='/user/login') Вход
+                li.main-nav__item.main-nav__item--signin-icon
+                    a.main-nav__link(href='/user/signin') Вход
                 li.main-nav__item
-                    a.main-nav__link(href='/user/registration') Регистрация
+                    a.main-nav__link(href='/user/signup') 
+                        span Регистрация
         else
             ul.main-nav__list.user-list
-                li.main-nav__item.main-nav__item--profile-icon
-                    a.main-nav__link(href='/user/profile')= userName
-                li.main-nav__item.main-nav__item--logout-icon
-                    a.main-nav__link(href='/user/logout') Выход
+                if user.role.id !== 1
+                    li.main-nav__item.main-nav__item--profile-icon
+                        a.main-nav__link(href='/user/profile')
+                            span Профиль
+                if user.role.id === 1
+                    li.main-nav__item.main-nav__item--signout-icon
+                        a.main-nav__link(href=`${process.env.ADMIN_URL}/registration`)
+                            span Администрирование
+                li.main-nav__item.main-nav__item--signout-icon
+                    a.main-nav__link(href='/user/signout') 
+                        span Выход

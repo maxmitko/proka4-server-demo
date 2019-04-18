@@ -8,10 +8,10 @@ block page-main
             a.breadcrumbs__item Услуги
         section.service-img
             h2.visually-hidden Список услуг
-            each service in serviceList
-                a.service-img__link(href=`/service/${service.service_id}`)
+            each service in data
+                a.service-img__link(href=`/service/${service.id}`)
                     div.service-img__filter
-                        div.service-img__item(style=`background-image: url("${service.img}");`)
+                        div.service-img__item(style=`background-image: url("/images/service/410x240/${service.image}");`)
                             div.service-img__title-wrapper
                     h2.service-img__title= service.title
 
