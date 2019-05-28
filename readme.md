@@ -3,9 +3,7 @@
 
 [Live DEMO](https://proka4.ru:2080/)
 
-[admin-panel-demo](https://github.com/maxmitko/proka4-server-admin-demo)
-
-[client-layout-demo](https://github.com/maxmitko/proka4-client-layout-demo)
+[admin-panel-spa](https://github.com/maxmitko/proka4-server-admin-demo)
 
 ```
 Учетная запись администратора:
