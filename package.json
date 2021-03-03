@@ -36,7 +36,7 @@
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "reflect-metadata": "^0.1.13",
     "serve-favicon": "^2.5.0",
     "shortid": "^2.2.14",
