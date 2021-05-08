@@ -41,7 +41,7 @@
     "serve-favicon": "^2.5.0",
     "shortid": "^2.2.14",
     "showdown": "^1.9.0",
-    "typeorm": "^0.2.12",
+    "typeorm": "^0.2.25",
     "url-parse": "^1.4.4",
     "winston": "^3.1.0"
   },
